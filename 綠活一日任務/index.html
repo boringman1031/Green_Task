@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>綠活一日任務 - 首頁</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "微軟正黑體", sans-serif;
+      background: #e6fffa;
+    }
+
+    nav {
+      background-color: #2f855a;
+      padding: 15px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 20px;
+      font-size: 18px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: #f6e05e;
+      transform: scale(1.1);
+    }
+
+    /* Hero 影片背景區塊 */
+    .hero-video {
+      position: relative;
+      height: 90vh;
+      overflow: hidden;
+    }
+
+    .hero-video video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      filter: brightness(0.85);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      color: white;
+      text-align: center;
+      padding-top: 25vh;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+    }
+
+    .hero-content h1 {
+      font-size: 56px;
+      margin: 0;
+      animation: fadeInDown 1.2s ease-out;
+    }
+
+    .hero-content p {
+      font-size: 24px;
+      margin: 20px 0;
+      animation: fadeInUp 1.5s ease-out;
+    }
+
+    .hero-content a {
+      padding: 14px 30px;
+      background-color: #48bb78;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: bold;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      animation: fadeInUp 1.8s ease-out;
+    }
+
+    .hero-content a:hover {
+      background-color: #38a169;
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    }
+
+    @keyframes fadeInDown {
+      0% { opacity: 0; transform: translateY(-30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .section {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .section h2 {
+      font-size: 32px;
+      color: #22543d;
+    }
+
+    .section p {
+      font-size: 18px;
+      color: #2d3748;
+      max-width: 800px;
+      margin: 20px auto;
+      line-height: 1.6;
+    }
+
+    footer {
+      background-color: #22543d;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+  <a href="index.html">首頁</a>
+  <a href="daily.html">每日任務</a>
+  <a href="category.html">知識分類</a>
+  <a href="quiz.html">小測驗</a>
+  <a href="grow.html">綠花園</a>
+  <a href="contact.html">關於我們</a>
+</nav>
+
+
+  <div class="hero-video">
+    <video autoplay muted loop playsinline>
+      <source src="video/greenlife.mp4" type="video/mp4">
+      您的瀏覽器不支援影片播放。
+    </video>
+    <div class="hero-content">
+      <h1>綠活一日任務</h1>
+      <p>每天一個小行動，為地球帶來大改變</p>
+      <a href="daily.html">開始今天的任務 ➜</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>什麼是綠活一日任務？</h2>
+    <p>
+      我們希望透過簡單的每日任務，讓每個人都能輕鬆參與永續行動。
+      無論是節能、省水、減塑或環保交通，只要每天一小步，環境就會變得不一樣！
+    </p>
+  </div>
+
+  <footer>
+    © 2025 綠活一日任務 ｜打造你的永續日常 🌏
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>永續生活小知識 - 整塊滑動新聞區</title>
+ <style>
+    body {
+      margin: 0; padding: 0;
+      font-family: 'ZCOOL KuaiLe', 'Noto Sans TC', sans-serif;
+      background: radial-gradient(circle at top, #e6fffa, #c6f6d5, #fefcbf);
+      animation: gradientShift 10s ease infinite;
+    }
+    @keyframes gradientShift {
+      0%,100% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+    }
+    nav {
+      background-color: #2f855a;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 20px;
+      font-size: 18px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    nav a:hover {
+      color: #f6e05e;
+      transform: scale(1.1);
+    }
+    .logo-sticky {
+      position: fixed;
+      bottom: 0;
+      right:0;
+      z-index: 1000;
+      display: inline-block;
+      padding: 5px;
+      transition: transform 0.3s ease;
+    }
+    .logo-sticky img {
+      height: 60px;
+      object-fit: contain;
+    }
+    .logo-sticky:hover {
+      transform: scale(1.05);
+      cursor: pointer;
+    }
+    .title {
+      text-align: center;
+      font-size: 40px;
+      margin: 50px 0 30px;
+      color: #22543d;
+      animation: fadeInDown 1s ease-out;
+    }
+    @keyframes fadeInDown {
+      from {opacity: 0; transform: translateY(-30px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 30px;
+      max-width: 1000px;
+      margin: auto;
+      padding: 0 20px 60px;
+    }
+    .category-card {
+      background: linear-gradient(145deg, #ffffff, #e6fffa);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      padding: 30px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      user-select: none;
+    }
+    .category-card:hover {
+      transform: scale(1.08) rotate(-1deg);
+      box-shadow: 0 15px 40px rgba(0, 128, 0, 0.3);
+    }
+    .category-icon {
+      font-size: 50px;
+      margin-bottom: 15px;
+    }
+    .category-title {
+      font-size: 24px;
+      color: #2f855a;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .category-desc {
+      color: #4a5568;
+      font-size: 16px;
+    }
+    #news-section {
+      max-width: 800px;
+      margin: 40px auto 80px;
+      background: #f0fff4;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      padding: 30px 40px;
+      color: #22543d;
+      font-size: 18px;
+      line-height: 1.5;
+      overflow: hidden;
+      position: relative;
+      height: 280px;
+      left: 0;
+      transition: none;
+    }
+    #news-title {
+      margin-bottom: 20px;
+      border-bottom: 3px solid #2f855a;
+      padding-bottom: 8px;
+      position: relative;
+      z-index: 10;
+      font-size: 22px;
+    }
+    #news-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      position: relative;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+    #news-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid #c6f6d5;
+    }
+    #news-list li:last-child {
+      border-bottom: none;
+    }
+    #news-list li a {
+      text-decoration: none;
+      color: #276749;
+      transition: color 0.3s;
+    }
+    #news-list li a:hover {
+      color: #2f855a;
+      text-decoration: underline;
+    }
+    .slide-out-left { animation: slideOutLeft 0.5s forwards; }
+    .slide-in-right { animation: slideInRight 0.5s forwards; }
+    .slide-out-right { animation: slideOutRight 0.5s forwards; }
+    .slide-in-left { animation: slideInLeft 0.5s forwards; }
+    @keyframes slideOutLeft { 0% { left: 0; opacity: 1; } 100% { left: -110%; opacity: 0; } }
+    @keyframes slideInRight { 0% { left: 110%; opacity: 0; } 100% { left: 0; opacity: 1; } }
+    @keyframes slideOutRight { 0% { left: 0; opacity: 1; } 100% { left: 110%; opacity: 0; } }
+    @keyframes slideInLeft { 0% { left: -110%; opacity: 0; } 100% { left: 0; opacity: 1; } }
+  </style>
+</head>
+<body>
+ 
+ <nav>
+  <a href="index.html">首頁</a>
+  <a href="daily.html">每日任務</a>
+  <a href="category.html">知識分類</a>
+  <a href="quiz.html">小測驗</a>
+  <a href="grow.html">綠花園</a>
+  <a href="contact.html">關於我們</a>
+</nav>
+
+  <h1 class="title">🌍 永續生活分類小知識</h1>
+
+  <div class="categories">
+    <div class="category-card" data-category="green-diet">
+      <div class="category-icon">🥦</div>
+      <div class="category-title">綠色飲食</div>
+      <div class="category-desc">了解少肉多菜、在地食材與有機農業，吃得健康又環保。</div>
+    </div>
+
+    <div class="category-card" data-category="green-transport">
+      <div class="category-icon">🚲</div>
+      <div class="category-title">綠色交通</div>
+      <div class="category-desc">步行、騎車或搭乘大眾運輸，減少碳排放與空氣汙染。</div>
+    </div>
+
+    <div class="category-card" data-category="green-shopping">
+      <div class="category-icon">🛍️</div>
+      <div class="category-title">綠色購物</div>
+      <div class="category-desc">選擇無包裝、環保標章產品，支持永續品牌與本地商家。</div>
+    </div>
+
+    <div class="category-card" data-category="energy-saving">
+      <div class="category-icon">💡</div>
+      <div class="category-title">節能用電</div>
+      <div class="category-desc">隨手關燈、拔插頭、使用節能設備，一起省電救地球。</div>
+    </div>
+  </div>
+
+  <!-- 新聞區塊 -->
+  <div id="news-section" style="display:none;">
+    <h2 id="news-title">新聞標題</h2>
+    <ul id="news-list"></ul>
+  </div>
+
+  <script>
+    const newsData = {
+      "green-diet": [
+        { title: "綠色飲食興起 享受美味兼顧環保", url: "https://www.peopo.org/news/802300" },
+        { title: "竹市114家環保餐廳響應綠色飲食抽好禮活動", url: "https://more-news.tw/102965/" },
+        { title: "綠色飲食怎麼吃？8 種方式一次看", url: "https://esg.tvbs.com.tw/view/greenlife/628" }
+      ],
+      "green-transport": [
+        { title: "台東縣議長吳秀華關注客家文化活化ＡＩ教育發展與綠色交通政策", url: "https://www.cdns.com.tw/articles/1226136" },
+        { title: "新北力推綠色交通 斥資50億打造917公里自行車道", url: "https://www.chinatimes.com/realtimenews/20250430002119-260405?chdtv" },
+        { title: "大村鄉MOOVO公共自行車啟用 大葉大學便利綠色交通服務升級", url: "https://www.cna.com.tw/postwrite/chi/397333" }
+      ],
+      "green-shopping": [
+        { title: "【有影】桃園實踐綠色消費 集結4大賣場推系列活動打造淨零生活", url: "https://tw.news.yahoo.com/有影-桃園實踐綠色消費-集結4大賣場推系列活動打造淨零生活-025251817.html?guccounter=1&guce_referrer=aHR0cHM6Ly93d3cuZ29vZ2xlLmNvbS8&guce_referrer_sig=AQAAACrfZDbBZQJ05VoU9o62GHp_Ibj7emXZF1uT3Y--P4IWkC2Fuv5POYPFKYMphIED7zYQHsP1Iugw98tYgdRz62UAxKd4vMRFK_KOC3UEWtDVpBTNWPqyDSFVExefaP6j2fs9aw7cFjnA_DQKostxB9z6uxVFVGx7Mky10SvY5SZJ" },
+        { title: "富邦媒推減碳儀表板 會員綠色消費成果看得見", url:"https://netzero.cna.com.tw/news/202502060137/" },
+        { title: "首屆台灣零售永續獎 遠東SOGO促綠色消費 奪七獎", url: "https://www.chinatimes.com/newspapers/20250515000282-260210?chdtv" }
+      ],
+      "energy-saving": [
+        { title: "夏季電價來臨！居家省電這樣做　5個必學節能妙招", url: "https://news.tvbs.com.tw/esg/2885353" },
+        { title: "校園如何節能減碳？ 節能燈具與感應燈降低用電量", url: "https://www.peopo.org/news/803008" },
+        { title: "用電屢創新高　企業工廠節電靠這3招", url: "https://csr.cw.com.tw/article/42078" }
+      ]
+    };
+
+    const newsSection = document.getElementById('news-section');
+    const newsTitle = document.getElementById('news-title');
+    const newsList = document.getElementById('news-list');
+
+    let currentCategory = null;
+
+    document.querySelectorAll('.category-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const newCategory = card.getAttribute('data-category');
+        if (newCategory === currentCategory) return; // 同分類點擊不重複切換
+
+        if (!currentCategory) {
+          // 第一次顯示，直接顯示新分類
+          currentCategory = newCategory;
+          updateNews(newCategory);
+          newsSection.style.display = 'block';
+          newsSection.classList.add('slide-in-right');
+          setTimeout(() => {
+            newsSection.classList.remove('slide-in-right');
+          }, 500);
+          return;
+        }
+
+        // 如果已有分類，先滑出舊內容，等動畫完後換新內容再滑入
+        newsSection.classList.add('slide-out-left');
+
+        newsSection.addEventListener('animationend', function handler(e) {
+          if (e.animationName === 'slideOutLeft') {
+            newsSection.classList.remove('slide-out-left');
+            updateNews(newCategory);
+            newsSection.classList.add('slide-in-right');
+          } else if (e.animationName === 'slideInRight') {
+            newsSection.classList.remove('slide-in-right');
+            newsSection.removeEventListener('animationend', handler);
+            currentCategory = newCategory;
+          }
+        }, { once: false });
+      });
+    });
+
+    function updateNews(category) {
+      newsTitle.textContent = {
+        "green-diet": "綠色飲食相關新聞",
+        "green-transport": "綠色交通最新消息",
+        "green-shopping": "綠色購物專題報導",
+        "energy-saving": "節能用電小技巧"
+      }[category] || "新聞";
+
+      newsList.innerHTML = newsData[category].map(item =>
+        `<li><a href="${item.url}" target="_blank">${item.title}</a></li>`
+      ).join('');
+    }
+  </script>
+<a href="index.html" class="logo-sticky">
+  <img src="img/logo.png" alt="">
+</a>
+</body>
+</html>

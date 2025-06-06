@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>綠活一日任務 - 抽卡</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "微軟正黑體", sans-serif;
+      background: linear-gradient(to bottom right, #e6fffa, #ffffff);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    nav {
+      background-color: #2f855a;
+      padding: 15px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 20px;
+      font-size: 18px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: #f6e05e;
+      transform: scale(1.1);
+    }
+
+    .logo-sticky {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      z-index: 1000;
+      display: inline-block;
+      padding: 5px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-sticky img {
+      height: 60px;
+      object-fit: contain;
+    }
+
+    .logo-sticky:hover {
+      transform: scale(1.05);
+      cursor: pointer;
+    }
+
+    .title {
+      text-align: center;
+      margin: 30px 0 10px;
+      font-size: 32px;
+      color: #2f855a;
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(4, 160px);
+      grid-gap: 20px;
+      justify-content: center;
+      padding: 20px 0 40px;
+      flex-grow: 1;
+    }
+
+    .card {
+      width: 160px;
+      height: 220px;
+      perspective: 1000px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.8s;
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+
+    .card:hover .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 15px;
+      background-color: #f0fff4;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backface-visibility: hidden;
+      padding: 15px;
+      font-size: 15px;
+      color: #2f855a;
+      text-align: center;
+    }
+
+    .card-front {
+      background-size: cover;
+      background-position: center;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+    }
+
+    .card-back {
+      background: white;
+      transform: rotateY(180deg);
+    }
+
+    footer {
+      background-color: #22543d;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">首頁</a>
+    <a href="daily.html">每日任務</a>
+    <a href="category.html">知識分類</a>
+    <a href="quiz.html">小測驗</a>
+    <a href="grow.html">綠花園</a>
+    <a href="contact.html">聯絡我們</a>
+  </nav>
+
+  <h1 class="title">抽出你的今日任務卡！</h1>
+
+  <div class="card-container" id="card-container">
+    <!-- JS 動態產生卡片 -->
+  </div>
+
+  <footer>
+    © 2025 綠活一日任務 ｜打造你的永續日常 🌏
+  </footer>
+
+  <script>
+    const tasks = [
+      "今天請使用環保杯買飲料！",
+      "今天請自備環保袋購物！",
+      "今天請拒絕使用吸管！",
+      "今天請使用手帕代替紙巾！",
+      "今天請隨手關燈省電！",
+      "今天請關閉冷氣多開窗！",
+      "今天請拔除插頭節能省電！",
+      "今天請使用 LED 燈！",
+      "今天請吃一餐無肉日！",
+      "今天請多步行少騎車！",
+      "今天請搭乘大眾交通工具！",
+      "今天請走樓梯，不搭電梯！",
+      "今天請回收三樣資源物品！",
+      "今天請分類作堆肥！",
+      "今天請減少一次性塑膠使用！",
+      "今天請重複使用物品！"
+    ];
+
+    const taskToFlowerMap = {
+      // 🌷 Tulip
+      "今天請使用環保杯買飲料！": "tulip",
+      "今天請自備環保袋購物！": "tulip",
+      "今天請拒絕使用吸管！": "tulip",
+      "今天請使用手帕代替紙巾！": "tulip",
+
+      // 🌻 Sunflower
+      "今天請隨手關燈省電！": "sunflower",
+      "今天請關閉冷氣多開窗！": "sunflower",
+      "今天請拔除插頭節能省電！": "sunflower",
+      "今天請使用 LED 燈！": "sunflower",
+
+      // 🍀 Clover
+      "今天請吃一餐無肉日！": "clover",
+      "今天請多步行少騎車！": "clover",
+      "今天請搭乘大眾交通工具！": "clover",
+      "今天請走樓梯，不搭電梯！": "clover",
+
+      // 🌼 Daisy
+      "今天請回收三樣資源物品！": "daisy",
+      "今天請分類作堆肥！": "daisy",
+      "今天請減少一次性塑膠使用！": "daisy",
+      "今天請重複使用物品！": "daisy"
+    };
+
+    const bgImages = [
+      "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=800",
+      "https://images.unsplash.com/photo-1570913196376-dacb677ef459?w=800",
+      "https://images.unsplash.com/photo-1648582268945-4206c1490ed7?w=800",
+      "https://images.unsplash.com/photo-1604187351574-c75ca79f5807?w=800",
+      "https://images.unsplash.com/photo-1494989615690-9900562a5b20?w=800",
+      "https://images.unsplash.com/photo-1681617819600-70ae9ab1a8eb?w=800"
+    ];
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function createCard(taskText, imageUrl) {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const inner = document.createElement("div");
+      inner.className = "card-inner";
+
+      const front = document.createElement("div");
+      front.className = "card-front";
+      front.style.backgroundImage = `url('${imageUrl}')`;
+
+      const back = document.createElement("div");
+      back.className = "card-back";
+      back.textContent = taskText;
+
+      card.addEventListener("click", () => {
+        const flowerType = taskToFlowerMap[taskText] || "default";
+        localStorage.setItem("flowerType", flowerType);
+        localStorage.setItem("growth", "1");
+        console.log(`🌱 已設定花種為 ${flowerType}，成長階段為 1`);
+      });
+
+      inner.appendChild(front);
+      inner.appendChild(back);
+      card.appendChild(inner);
+      return card;
+    }
+
+    function init() {
+      const container = document.getElementById("card-container");
+      container.innerHTML = "";
+
+      const shuffledTasks = shuffle(tasks.slice());
+      const shuffledImages = shuffle(bgImages.slice());
+
+      for (let i = 0; i < shuffledTasks.length; i++) {
+        const task = shuffledTasks[i];
+        const image = shuffledImages[i % shuffledImages.length];
+        container.appendChild(createCard(task, image));
+      }
+    }
+
+    window.onload = init;
+  </script>
+
+  <a href="index.html" class="logo-sticky">
+    <img src="img/logo.png" alt="logo">
+  </a>
+</body>
+</html>

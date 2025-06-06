@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>綠生活小測驗（倒數計時版）</title>
+  <style>
+    body {
+      font-family: "微軟正黑體", sans-serif;
+      background: linear-gradient(to bottom right, #f0fff4, #ffffff);
+      margin: 0;
+      padding: 0;
+    }
+
+    nav {
+      background-color: #2f855a;
+      padding: 15px;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .logo-sticky {
+      position: fixed;
+      bottom: 0;
+      right:0;
+      z-index: 1000;
+      display: inline-block;
+      padding: 5px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-sticky img {
+      height: 60px;
+      object-fit: contain;
+    }
+
+    .logo-sticky:hover {
+      transform: scale(1.05);
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 60px auto;
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0, 128, 96, 0.15);
+    }
+
+    h1 {
+      text-align: center;
+      color: #22543d;
+      margin-bottom: 20px;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    .timer {
+      text-align: center;
+      font-size: 48px;
+      font-weight: bold;
+      color: #e53e3e;
+      margin: 20px 0;
+      animation: pulse 1s infinite;
+    }
+
+    .question {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    .options button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 16px;
+      border: 2px solid #2f855a;
+      background-color: #f0fff4;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .options button:hover {
+      background-color: #c6f6d5;
+    }
+
+    .correct {
+      background-color: #48bb78 !important;
+      color: white;
+    }
+
+    .wrong {
+      background-color: #feb2b2 !important;
+      color: #742a2a;
+    }
+
+    .disabled {
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    #result {
+      text-align: center;
+      font-size: 22px;
+      margin-top: 30px;
+      color: #2f855a;
+    }
+
+    .restart-btn {
+      margin-top: 25px;
+      background: #2f855a;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      font-size: 18px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .restart-btn:hover {
+      background: #276749;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+  <a href="index.html">首頁</a>
+  <a href="daily.html">每日任務</a>
+  <a href="category.html">知識分類</a>
+  <a href="quiz.html">小測驗</a>
+  <a href="grow.html">綠花園</a>
+  <a href="contact.html">關於我們</a>
+</nav>
+
+
+  <div class="container">
+    <h1>綠生活小測驗</h1>
+
+    <div class="timer" id="timer">-- 秒</div>
+
+    <div id="quiz-box">
+      <div class="question" id="question"></div>
+      <div class="options" id="options"></div>
+      <div id="result"></div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { q: "哪個行為有助節能？", options: ["開冷氣不關門", "使用 LED 燈", "整天開電視", "關窗開電風扇"], answer: 1 },
+      { q: "以下何者為省水方式？", options: ["刷牙開水不關", "馬桶不修漏水", "洗菜重複用水", "每天洗車"], answer: 2 },
+      { q: "哪種交通方式最環保？", options: ["開私人車", "騎腳踏車", "搭飛機", "搭 Uber"], answer: 1 },
+      { q: "下列何者可減塑？", options: ["自備餐具", "每天買手搖杯", "用塑膠袋裝便當", "吸管收藏"], answer: 0 },
+      { q: "什麼物品可回收？", options: ["寶特瓶", "用過的衛生紙", "廚餘", "破掉的襪子"], answer: 0 },
+      { q: "廚餘應如何處理？", options: ["直接丟垃圾桶", "用塑膠袋包起來", "分類作堆肥", "丟水溝"], answer: 2 },
+      { q: "下列哪一個為再生能源？", options: ["石油", "煤炭", "太陽能", "天然氣"], answer: 2 },
+      { q: "「關燈一小時」活動是為了？", options: ["節能減碳", "鼓勵用燭光", "測試停電", "慶祝節日"], answer: 0 },
+      { q: "購物時該怎麼做最環保？", options: ["用塑膠袋", "帶購物袋", "每次買一個紙袋", "用箱子裝"], answer: 1 },
+      { q: "如何減少紙張浪費？", options: ["單面列印", "多列印幾份備用", "雙面列印", "不列印"], answer: 2 }
+    ];
+
+    let current = 0;
+    let score = 0;
+    let timer;
+    const timeLimit = 10;
+
+    function showQuestion() {
+      clearInterval(timer);
+      const q = questions[current];
+      document.getElementById("question").textContent = `Q${current + 1}：${q.q}`;
+      document.getElementById("options").innerHTML = "";
+      document.getElementById("result").textContent = "";
+
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => selectAnswer(i, btn);
+        document.getElementById("options").appendChild(btn);
+      });
+
+      startCountdown();
+    }
+
+    function startCountdown() {
+      let timeLeft = timeLimit;
+      document.getElementById("timer").textContent = `${timeLeft} `;
+      timer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").textContent = `${timeLeft} `;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          handleTimeout();
+        }
+      }, 1000);
+    }
+
+    function handleTimeout() {
+      const buttons = document.querySelectorAll(".options button");
+      buttons.forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === questions[current].answer) btn.classList.add("correct");
+      });
+      setTimeout(() => nextQuestion(), 1000);
+    }
+
+    function selectAnswer(index, btn) {
+      clearInterval(timer);
+      const correct = questions[current].answer;
+      const buttons = document.querySelectorAll(".options button");
+
+      buttons.forEach((b, i) => {
+        b.disabled = true;
+        if (i === correct) b.classList.add("correct");
+        if (i === index && i !== correct) b.classList.add("wrong");
+      });
+
+      if (index === correct) score++;
+      setTimeout(() => nextQuestion(), 1000);
+    }
+
+    function nextQuestion() {
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      document.getElementById("question").textContent = "🎉 測驗完成！";
+      document.getElementById("options").innerHTML = "";
+      document.getElementById("timer").textContent = "";
+      let msg = `你答對了 ${score} / ${questions.length} 題！`;
+
+      if (score === questions.length) {
+        msg += " 🌟 你是綠生活神人！";
+      } else if (score >= 7) {
+        msg += " 👍 很厲害，再接再厲！";
+      } else {
+        msg += " 💡 可以再加油，學習更多綠知識～";
+      }
+
+      // ✅ 測驗完成後讓種子成長
+      let currentGrowth = parseInt(localStorage.getItem("growth") || "1");
+      if (currentGrowth < 5) {
+        currentGrowth++;
+        localStorage.setItem("growth", currentGrowth);
+        msg += `\n🌱 你的種子長大了！目前階段：${currentGrowth}`;
+      }
+
+      document.getElementById("result").innerHTML = msg.replace(/\n/g, "<br>");
+
+      const btn = document.createElement("button");
+      btn.textContent = "重新挑戰";
+      btn.className = "restart-btn";
+      btn.onclick = () => {
+        current = 0;
+        score = 0;
+        showQuestion();
+      };
+      document.getElementById("options").appendChild(btn);
+    }
+
+    window.onload = showQuestion;
+  </script>
+
+  <a href="index.html" class="logo-sticky">
+    <img src="img/logo.png" alt="">
+  </a>
+</body>
+</html>
